@@ -1,7 +1,7 @@
 const express = require('express');
 
 const server = express();
-server.use(express.json()); //usae para o express entender o json 
+server.use(express.json()); //usar para o express entender o json 
 
 // localhost:3000/teste
 
@@ -20,7 +20,13 @@ server.use(express.json()); //usae para o express entender o json
 
 //Request body = {"marcos","email: "marcos@rocketseat.com.br"} 
 const users = ['diego', 'vanille','victor']; // variavel 
- 
+
+server.use((req, res, next) => { 
+    console.log(`Metodo:${req.method}; URL: ${req.url}; `);
+
+    return next();
+   });
+
 //users esta listando todos
 server.get('/users/' , (req , res) => {  
  
@@ -36,8 +42,8 @@ server.get('/users/:index' , (req , res) => {
     })
 
 
-
-server.post('/users', (req,res) =>{
+//esse metodo permite inserir um usuario
+server.post('/users', (req,res) => {
 const {name} = req.body;
 
 users.push(name);
@@ -45,6 +51,7 @@ users.push(name);
 return res.json(users);
 });
 
+//esse metodo permite editar o usuario no insomnia
 server.put('/users/:index' , (req,res) =>{
 
     const {index} = req.params;
@@ -53,11 +60,21 @@ server.put('/users/:index' , (req,res) =>{
     users[index] = name;
 
     return res.json(users);
-
 });
+//esse metodo deleta um usuario no insomnia
+server.delete('/users/:index',(req,res) =>{
+
+const {index} = req.params
+
+users.splice(index,1); //splice serve para verificar qual id precisa ser deletado
+
+return res.send(); 
+
+
+})
 
 
 server.listen(3000);
 
 
- 
+  
